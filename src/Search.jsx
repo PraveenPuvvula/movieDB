@@ -2,15 +2,38 @@ import React, { Component } from "react";
 import preload from "../data.json";
 import ShowCard from "./ShowCard";
 
-// eslint-disable-next-line react/prefer-stateless-function
 export default class Search extends Component {
+  state = {
+    searchTerm: "",
+  };
+
+  handleSearchTermChange = (event) => {
+    this.setState({ searchTerm: event.target.value });
+  };
+
   render() {
     return (
       <div className="search">
+        <header>
+          <h1>Your Videos</h1>
+          <input
+            type="text"
+            placeholder="Search"
+            value={this.state.searchTerm}
+            onChange={this.handleSearchTermChange}
+          />
+        </header>
         <div>
-          {preload.shows.map((show) => (
-            <ShowCard key={show.imdbID} {...show} />
-          ))}
+          {preload.shows
+            .filter(
+              (show) =>
+                `${show.title} ${show.description}`
+                  .toUpperCase()
+                  .indexOf(this.state.searchTerm.toUpperCase()) >= 0
+            )
+            .map((show) => (
+              <ShowCard key={show.imdbID} {...show} />
+            ))}
         </div>
       </div>
     );
